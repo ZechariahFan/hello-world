@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dj.demo.dao.ControlDao">
+	
+	
+	<select id="getControlInfo" statementType="CALLABLE">
+	
+			call controlInfo(
+			#{tableName,jdbcType=VARCHAR,mode=IN},
+			#{PAGESIZE,jdbcType=INTEGER,mode=IN},
+			#{currPage,jdbcType=INTEGER,mode=IN},
+			#{total_record,jdbcType=INTEGER,mode=OUT},
+			#{total_page,jdbcType=INTEGER,mode=OUT},
+			#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=controlMap}
+		)
+	</select>
+	
+	
+	<resultMap	id="controlMap" type="com.dj.demo.model.TB_Control">
+		<result column="operator" property="operator"></result>
+		<result column="cname1" property="cname1"></result>
+		<result column="cname2" property="cname2"></result>
+		<result column="cname3" property="cname3"></result>
+		<result column="cname4" property="cname4"></result>
+		<result column="cname5" property="cname5"></result>
+		<result column="cname6" property="cname6"></result>
+		<result column="cname7" property="cname7"></result>
+		<result column="cname8" property="cname8"></result>
+		<result column="alias" property="alias"></result>
+	</resultMap>
+	
+	
+	<update id="updateControl" parameterType="map">
+		update usrInfo set control=#{alias} where operator=#{operator}
+	</update>
+	
+	<insert id="addControl" parameterType="com.dj.demo.model.TB_Control">
+		INSERT INTO tb_control (CNAME1,CNAME2,CNAME3,CNAME4,CNAME5,CNAME6,CNAME7,CNAME8,ALIAS) 
+		values (#{cname1},#{cname2},#{cname3},#{cname4},#{cname5},#{cname6},#{cname7},#{cname8},#{alias})
+	</insert>
+	
+	
+	
+	<delete id="deleteControlById" parameterType="string">
+	
+		 delete from TB_control where id in    
+		    <foreach collection="array" open="(" close=")" separator="," item="ids" > 
+		              #{ids}
+	        </foreach>
+		
+	</delete>
+	
+	<update id="updateUsrInfoControl" parameterType="map">
+		
+		update usrinfo set control=#{v} where control in    
+		    <foreach collection="ids" open="(" close=")" separator="," item="ids" > 
+		              #{ids}
+	        </foreach>
+	</update>
+	
+	
+	<select id="findConName" parameterType="string" resultType="int">
+		SELECT COUNT(id) from tb_control where ALIAS =#{alias}
+	</select>
+	
+	<select id="getAlias" parameterType="int" resultType="string">
+		SELECT alias from tb_control where id =#{id}
+	</select>
+</mapper>

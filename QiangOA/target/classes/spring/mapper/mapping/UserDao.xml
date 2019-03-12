@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dj.demo.dao.UserDao">
+	
+	<select id="findUserDao" parameterType="com.dj.demo.model.Operator" resultType="com.dj.demo.model.Operator">
+		select operator,password,name from OPERATOR where operator=#{operator}
+		
+		<if test="password != null and password != '' ">
+    		and password=#{password}
+  		</if>
+	</select>
+	
+	 <select id="findUserDao2" statementType="CALLABLE">
+		{
+			call pro_8(
+				#{username,jdbcType=VARCHAR,mode=IN},
+				#{password,jdbcType=VARCHAR,mode=IN},
+				#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=cursorMap}
+			)
+		
+		}
+	</select>
+	
+	
+	
+	
+
+
+	
+	
+	
+	<insert id="addUser" statementType="CALLABLE">
+		{call pro_addUser(
+			#{username,jdbcType=VARCHAR,mode=IN},
+			#{password,jdbcType=VARCHAR,mode=IN},
+			#{descp,jdbcType=VARCHAR,mode=IN},
+			#{status,jdbcType=VARCHAR,mode=IN},
+			#{role,jdbcType=INTEGER,mode=IN},
+			#{pic,jdbcType=VARCHAR,mode=IN}
+		)}
+	</insert>
+	
+	
+	<select id="getUsers" statementType="CALLABLE">
+		{call getUserPro(
+			#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=userMap}
+		)}
+	</select>
+	
+	
+	<delete id="deleteUser" statementType="CALLABLE">
+		{call deleteUsePro(
+			#{userId,jdbcType=INTEGER,mode=IN},
+			#{row,jdbcType=INTEGER,mode=OUT}
+		)}
+	</delete>
+	
+	<select id="getUserInfo" statementType="CALLABLE">
+		{call seleUserInfo(
+			#{userId,jdbcType=INTEGER,mode=IN},
+			#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=userMap}
+		)}
+	</select>
+	
+	<update id="updateUserInfo" statementType="CALLABLE">
+		{call updateUserInfo(
+			#{userid,jdbcType=INTEGER,mode=IN},
+			#{password,jdbcType=VARCHAR,mode=IN},
+			#{descp,jdbcType=VARCHAR,mode=IN},
+			#{status,jdbcType=VARCHAR,mode=IN},
+			#{role,jdbcType=INTEGER,mode=IN},
+			#{pic,jdbcType=VARCHAR,mode=IN},
+			#{row,jdbcType=INTEGER,mode=OUT}
+		)}
+	
+	</update>
+	
+	<update id="updateUserInfos" parameterType="com.dj.demo.model.UsrInfo">
+		update UsrInfo  
+		<set>
+		<if test="position != null">position=#{position},</if>
+		<if test="classify != null">classify=#{classify},</if>
+		<if test="jdsc != null">jdsc=#{jdsc},</if>
+      <if test="line != null">line=#{line},</if>
+      <if test="control != null">control=#{control},</if>
+      <if test="num != null">num=#{num}</if>
+    </set>
+  where operator=#{operator}
+	</update>
+	
+	
+	<select id="getUserAndDivide" statementType="CALLABLE" >
+		{call getUserInfoAndDividePae(
+			#{tableName,jdbcType=VARCHAR,mode=IN},
+			#{aName,jdbcType=VARCHAR,mode=IN},
+			#{showPage,jdbcType=INTEGER,mode=IN},
+			#{currentPage,jdbcType=INTEGER,mode=IN},
+			#{total_record,jdbcType=INTEGER,mode=OUT},
+			#{total_page,jdbcType=INTEGER,mode=OUT},
+			#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=userMap}
+		)}
+	</select>
+	
+	
+	<select id="findUserServiceFromUsrInfo" parameterType="com.dj.demo.model.Operator" resultType="int">
+		SELECT count(operator) from usrinfo where operator=#{operator}
+	</select>
+	
+	
+	<insert id="addUserToUsrInfo" parameterType="com.dj.demo.model.UsrInfo">
+		INSERT INTO USRINFO (operator,name,shift) 
+		VALUES(#{operator},#{name},#{shift})
+	</insert>
+	
+	
+	<select id="findControlAilas" parameterType="string" resultType="int">
+		SELECT count(id) FROM tb_control WHERE alias=#{control} 
+	</select>
+	
+	<select id="findLines" parameterType="string" resultType="int">
+	
+		SELECT count(id) FROM line WHERE lines=#{lines} 
+	</select>
+	
+	
+	<select id="findPosition" parameterType="string" resultType="int">
+	
+		SELECT count(id) FROM position WHERE name=#{position} 
+	</select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dj.demo.dao.RecordExceptionDao">
+	 
+	
+	
+	  <insert id="addExceptionRecord" statementType="CALLABLE">
+		{call WORK_REST_DURATION5(
+			#{operator,jdbcType=VARCHAR,mode=IN},
+			#{name,jdbcType=VARCHAR,mode=IN},
+			#{exception,jdbcType=VARCHAR,mode=IN},
+			#{descp,jdbcType=VARCHAR,mode=IN},
+			#{num,jdbcType=VARCHAR,mode=IN},
+			#{btTime,jdbcType=VARCHAR,mode=IN},
+			#{edTime,jdbcType=VARCHAR,mode=IN},
+		   #{currentTime,jdbcType=VARCHAR,mode=IN},
+		   #{report_id,jdbcType=VARCHAR,mode=IN},
+		   #{intervalTime,jdbcType=INTEGER,mode=IN},
+		   #{line_actual,jdbcType=VARCHAR,mode=IN},
+		   #{process,jdbcType=VARCHAR,mode=IN},
+		   #{rest_time,jdbcType=INTEGER,mode=IN},
+		   #{repeatTime,jdbcType=INTEGER,mode=IN},
+		   #{jdsc1,jdbcType=INTEGER,mode=IN},
+		   #{classify,jdbcType=VARCHAR,mode=IN},
+		   #{shift,jdbcType=VARCHAR,mode=IN},
+		   #{kaoQinDay,jdbcType=VARCHAR,mode=IN},
+		   #{rows,jdbcType=INTEGER,mode=OUT}
+		)} 
+		
+	</insert>  
+	
+	<select id="getExceptionInfo" parameterType="string" resultType="com.dj.demo.model.TB_Control">
+		SELECT * FROM tb_control where alias=#{id}
+	</select>
+	
+	<select id="getExceptionId" parameterType="string" resultType="string">
+		SELECT control FROM usrinfo where operator=#{operator}
+	</select>
+	
+	
+	<select id="isExistSameExceptionTime" parameterType="string" resultType="int">
+		SELECT COUNT(operator) FROM RECORD_EXCEPTION WHERE 
+		to_char(STARTTIME,'yyyy-mm-dd hh24:mi:ss')=#{btTime}
+		AND to_char(ENDTIME,'yyyy-mm-dd hh24:mi:ss')=#{edTime}
+	</select>
+</mapper>

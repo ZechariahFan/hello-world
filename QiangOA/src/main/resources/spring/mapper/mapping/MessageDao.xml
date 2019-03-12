@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dj.demo.dao.MessageDao">
+	<select id="getMessageDao" statementType="CALLABLE">
+	
+		{
+		call employeeInfo(
+			#{tableName,jdbcType=VARCHAR,mode=IN},
+			#{PAGESIZE,jdbcType=INTEGER,mode=IN},
+			#{currPage,jdbcType=INTEGER,mode=IN},
+			#{total_record,jdbcType=INTEGER,mode=OUT},
+			#{total_page,jdbcType=INTEGER,mode=OUT},
+			#{op,jdbcType=VARCHAR,mode=IN},
+			#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=messageMap}
+		)
+	}
+	</select>
+	
+	<select id="getMessageDao2" statementType="CALLABLE">
+	
+		{
+		call employeeInfo2(
+			#{tableName,jdbcType=VARCHAR,mode=IN},
+			#{PAGESIZE,jdbcType=INTEGER,mode=IN},
+			#{currPage,jdbcType=INTEGER,mode=IN},
+			#{total_record,jdbcType=INTEGER,mode=OUT},
+			#{total_page,jdbcType=INTEGER,mode=OUT},
+			#{op,jdbcType=VARCHAR,mode=IN},
+			#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=messageMap}
+		)
+	}
+	</select>
+	
+	
+	<resultMap	id="messageMap" type="com.dj.demo.model.UsrInfo">
+		<result column="operator" property="operator"></result>
+		<result column="name" property="name"></result>
+		<result column="job" property="position"></result>
+		<result column="num" property="num"></result>
+		<result column="sj" property="sj"></result>
+		<result column="shift" property="shift"></result>
+		<result column="classify" property="classify"></result>
+		<result column="control" property="control"></result>
+	</resultMap>
+	
+	
+	
+	<select id="getReceiveMessageById" statementType="CALLABLE">
+		{
+			call receive_pro(
+				#{tableName,jdbcType=VARCHAR,mode=IN},
+				#{id,jdbcType=INTEGER,mode=IN},
+				#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=receiveMap}
+			)
+		}
+	</select>
+	
+	
+	<select id="getReceiveMessages" statementType="CALLABLE">
+		{
+			call send_pro(
+				#{result,jdbcType=CURSOR,mode=OUT,javaType=ResultSet,resultMap=sendMap}
+			)
+		}
+	</select>
+	
+	
+	
+	
+	<select id="findControl" parameterType="string" resultType="int">
+		SELECT COUNT(*) FROM usrinfo WHERE operator=#{operator} AND control IS NOT NULL
+	</select>
+	
+	<select id="getTips" resultType="com.dj.demo.model.Tips">
+		SELECT l.lines ,c.alias,p.name position FROM line l FULL JOIN tb_control c ON l.id=c.id 
+		FULL JOIN position p ON p.id=l.id 
+	</select>
+	
+	<select id="getPosition" resultType="com.dj.demo.model.Tips">
+	select name position  from position
+	</select>
+	
+	<select id="getLines" resultType="com.dj.demo.model.Tips">
+	select lines from line
+	</select>
+	
+	<select id="getControl" resultType="com.dj.demo.model.Tips">
+	select alias from tb_control
+	</select>
+</mapper>
